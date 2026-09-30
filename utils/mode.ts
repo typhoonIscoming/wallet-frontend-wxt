@@ -4,27 +4,33 @@ export type AppMode = 'popup' | 'sidepanel';
 const MODE_STORAGE_KEY = 'wallet-extension-mode';
 
 type StorageArea = {
-	get: (key: string | string[]) => Promise<Record<string, unknown>>;
-	set: (items: Record<string, unknown>) => Promise<void>;
+	get: (key: string | string[] | null) => Promise<Record<string, any>>;
+	set: (items: Record<string, any>) => Promise<void>;
+	remove?: (key: string | string[]) => Promise<void>;
+	clear?: () => Promise<void>;
 };
 
-function getExtensionStorage() {
+function getExtensionStorage(): StorageArea {
 	const runtimeGlobal = globalThis as typeof globalThis & {
-		browser?: { storage?: { local: StorageArea } };
-		chrome?: { storage?: { local: StorageArea } };
+		browser?: { storage?: { local?: StorageArea } };
+		chrome?: { storage?: { local?: StorageArea } };
 	};
 
-	const browserApi = runtimeGlobal.browser;
-	if (browserApi?.storage?.local) {
-		return browserApi.storage;
+	const storageLocal =
+		runtimeGlobal.browser?.storage?.local ??
+		runtimeGlobal.chrome?.storage?.local ??
+		browser.storage?.local;
+
+	if (storageLocal) {
+		return storageLocal;
 	}
 
-	const chromeApi = runtimeGlobal.chrome;
-	if (chromeApi?.storage?.local) {
-		return chromeApi.storage;
-	}
-
-	return undefined;
+	return {
+		get: async () => ({}),
+		set: async () => undefined,
+		remove: async () => undefined,
+		clear: async () => undefined,
+	};
 }
 
 async function getCurrentWindowId(): Promise<number | undefined> {
@@ -44,19 +50,21 @@ function closeCurrentPopupWindow() {
 }
 
 export async function saveAppMode(mode: AppMode) {
-	const storage = getExtensionStorage();
-	if (!storage) {
+	const local = getExtensionStorage();
+	if (!local) {
 		return;
 	}
-	await storage.local.set({ [MODE_STORAGE_KEY]: mode });
+	await local.set({ [MODE_STORAGE_KEY]: mode });
 }
 
 export async function getSavedAppMode(): Promise<AppMode> {
-	const storage = getExtensionStorage();
-	if (!storage) {
+	const local = getExtensionStorage();
+	console.log('local storage object:', local);
+	if (!local) {
 		return 'popup';
 	}
-	const result = await storage.local.get(MODE_STORAGE_KEY);
+	const result = await local.get(MODE_STORAGE_KEY);
+	console.log('retrieved mode from local storage:', result, result[MODE_STORAGE_KEY]);
 	return result[MODE_STORAGE_KEY] === 'sidepanel' ? 'sidepanel' : 'popup';
 }
 
@@ -86,15 +94,15 @@ export async function openPopupAndCloseSidePanel() {
 	}
 
 	try {
-		if ('action' in browser) {
-			await setActionPopupEnabled(true);
-			await browser.action.openPopup();
-		}
 		if ('sidePanel' in browser) {
 			const windowId = await getCurrentWindowId();
 			if (typeof windowId === 'number') {
 				await browser.sidePanel.close({ windowId });
 			}
+		}
+		if ('action' in browser) {
+			await setActionPopupEnabled(true);
+			await browser.action.openPopup();
 		}
 	} catch (error) {
 		console.error('openPopupAndCloseSidePanel failed:', error);

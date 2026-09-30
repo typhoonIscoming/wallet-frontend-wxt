@@ -16,14 +16,19 @@
 		"format": "prettier --write ."
 	},
 	"dependencies": {
+		"buffer": "^6.0.3",
+		"crypto-js": "^4.2.0",
+		"ethers": "^6.17.0",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4"
 	},
 	"devDependencies": {
+		"@types/crypto-js": "^4.2.2",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@wxt-dev/module-react": "^1.1.5",
 		"prettier": "^3.9.9",
+		"tailwindcss": "^4.3.3",
 		"typescript": "^5.9.3",
 		"web-ext": "^10.5.0",
 		"wxt": "^0.21.3"

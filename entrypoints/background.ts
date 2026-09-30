@@ -1,4 +1,3 @@
-import { applySavedMode, getSavedAppMode } from '@/utils/mode';
 /**
  * Background Script 主入口文件
  *
@@ -21,11 +20,20 @@ import { applySavedMode, getSavedAppMode } from '@/utils/mode';
  * - 所有敏感操作都需要用户确认，通过 Popup UI 展示
  * - 使用 Promise 模式处理异步的用户确认流程
  */
+import { browser } from 'wxt/browser';
+import { applySavedMode, getSavedAppMode } from '@/utils/mode';
+import { Buffer } from 'buffer';
+// 在全局作用域提供 Buffer polyfill
+// 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
+if (typeof globalThis.Buffer === 'undefined') {
+	globalThis.Buffer = Buffer;
+}
+
 export default defineBackground(async () => {
 	console.log('Hello background!', { id: browser.runtime.id });
 	const savedMode = await getSavedAppMode();
-	console.log('Saved mode:', savedMode);
-	if ('sidePanel' in browser) {
+	console.log('browser', browser);
+	if ('sidePanel' in browser && savedMode === 'sidepanel') {
 		browser.sidePanel
 			.setPanelBehavior({ openPanelOnActionClick: false })
 			.catch((error: unknown) =>
