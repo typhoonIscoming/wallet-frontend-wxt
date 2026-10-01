@@ -7,6 +7,7 @@ import {
 	type AppMode,
 } from '@/utils/mode';
 import './App.css';
+import MainPage from '@/components/mainPage';
 
 function App() {
 	const [mode, setMode] = useState<AppMode>('popup');
@@ -54,18 +55,7 @@ function App() {
 				</button>
 			</div>
 
-			<div className="wallet-card">
-				<h2>钱包概览</h2>
-				<div className="wallet-balance">$24,680.00</div>
-				<div className="wallet-row">
-					<span>总资产</span>
-					<strong>2.84 ETH</strong>
-				</div>
-				<div className="wallet-row">
-					<span>最近操作</span>
-					<strong>转账成功</strong>
-				</div>
-			</div>
+			<MainPage />
 
 			<button
 				className="primary-btn"

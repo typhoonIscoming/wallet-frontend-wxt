@@ -31,20 +31,22 @@ if (typeof globalThis.Buffer === 'undefined') {
 
 export default defineBackground(async () => {
 	console.log('Hello background!', { id: browser.runtime.id });
-	const savedMode = await getSavedAppMode();
-	console.log('browser', browser);
-	if ('sidePanel' in browser && savedMode === 'sidepanel') {
+	console.log('Background script initialized', 'sidePanel' in browser);
+	if ('sidePanel' in browser) {
 		browser.sidePanel
 			.setPanelBehavior({ openPanelOnActionClick: false })
 			.catch((error: unknown) =>
 				console.error('Failed to disable side panel auto-open:', error)
 			);
 	}
-
 	if ('action' in browser) {
-		browser.action.onClicked.addListener(async () => {
-			const savedMode = await getSavedAppMode();
-			await applySavedMode(savedMode);
-		});
+		const handler = async () => {
+			// const savedMode = await getSavedAppMode();
+			// 这里默认都打开弹窗模式
+			await applySavedMode('popup');
+			console.log('打开弹窗');
+			return;
+		};
+		browser.action.onClicked.addListener(handler);
 	}
 });

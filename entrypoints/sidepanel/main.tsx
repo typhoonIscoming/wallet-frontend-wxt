@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { openPopupAndCloseSidePanel, saveAppMode } from '@/utils/mode';
 import './style.css';
+import MainPage from '@/components/mainPage';
 
 function SidePanelApp() {
 	const switchToPopup = async () => {
@@ -20,6 +21,7 @@ function SidePanelApp() {
 				<h2>钱包侧边栏</h2>
 				<p>这是侧边栏初始化页面，后续可以继续扩展资产列表、交易记录和授权管理。</p>
 			</div>
+			<MainPage />
 
 			<div className="sidepanel-list">
 				<div className="list-item">

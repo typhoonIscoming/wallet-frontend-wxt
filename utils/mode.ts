@@ -19,7 +19,7 @@ function getExtensionStorage(): StorageArea {
 	const storageLocal =
 		runtimeGlobal.browser?.storage?.local ??
 		runtimeGlobal.chrome?.storage?.local ??
-		browser.storage?.local;
+		browser?.storage?.local;
 
 	if (storageLocal) {
 		return storageLocal;
@@ -96,7 +96,7 @@ export async function openPopupAndCloseSidePanel() {
 	try {
 		if ('sidePanel' in browser) {
 			const windowId = await getCurrentWindowId();
-			if (typeof windowId === 'number') {
+			if (typeof windowId === 'number' && windowId > 0) {
 				await browser.sidePanel.close({ windowId });
 			}
 		}
@@ -127,6 +127,7 @@ export async function openSidePanelAndClosePopup() {
 		}
 		if (typeof tabId === 'number') {
 			await browser.sidePanel.open({ tabId });
+
 			closeCurrentPopupWindow();
 		}
 	} catch (error) {
