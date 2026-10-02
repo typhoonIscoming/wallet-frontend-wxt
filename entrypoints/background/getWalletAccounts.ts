@@ -18,7 +18,7 @@
  */
 import getWalletState from './getWalletState';
 
-export async function getWalletAccounts(): Promise<string[]> {
+export default async function getWalletAccounts(): Promise<string[]> {
 	try {
 		const state = await getWalletState();
 		if (!state || state.isLocked || !state.currentAccount) {

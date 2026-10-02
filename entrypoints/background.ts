@@ -23,8 +23,25 @@
 import { browser } from 'wxt/browser';
 import { applySavedMode, getSavedAppMode } from '@/utils/mode';
 import type { AppMode } from '@/utils/mode';
-import { MODE_STORAGE_KEY } from '@/utils/env';
+import { MODE_STORAGE_KEY, POPUP, SIDEPANEL } from '@/utils/env';
 import { Buffer } from 'buffer';
+
+import type {
+	RequestContext,
+	PendingAuthRequest,
+	PendingSignRequest,
+	PendingSwitchChainRequest,
+	PendingTransactionRequest,
+	PendingAddChainRequest,
+	PendingWatchAssetRequest,
+} from '@/entrypoints/background/types';
+import getWalletState from '@/entrypoints/background/getWalletState';
+import getWalletAccounts from '@/entrypoints/background/getWalletAccounts';
+import getProvider from '@/entrypoints/background/getProvider';
+import getUnlockedWallet from '@/entrypoints/background/getUnlockedWallet';
+import requestUserAuth from '@/entrypoints/background/requestUserAuth';
+import openPopup from '@/entrypoints/background/popup';
+
 // 在全局作用域提供 Buffer polyfill
 // 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
 if (typeof globalThis.Buffer === 'undefined') {
@@ -33,6 +50,89 @@ if (typeof globalThis.Buffer === 'undefined') {
 
 export default defineBackground(async () => {
 	console.log('Hello background!', { id: browser.runtime.id });
+
+	/**
+	 * 【Popup 路由管理】
+	 * 跟踪当前 Popup 应该显示哪个页面。
+	 * 当 DApp 发起需要用户确认的操作时，Background 会设置路由并打开 Popup。
+	 * Popup 通过 POPUP_GET_ROUTE 消息获取当前路由。
+	 */
+	let currentPopupRoute: string | null = null;
+
+	const pendingAuthRequests = new Map<string, PendingAuthRequest>(); // 账户授权请求
+	const pendingSignRequests = new Map<string, PendingSignRequest>(); // 签名请求
+	const pendingSwitchChainRequests = new Map<string, PendingSwitchChainRequest>(); // 网络切换请求
+	const pendingTransactionRequests = new Map<string, PendingTransactionRequest>(); // 交易请求
+	const pendingAddChainRequests = new Map<string, PendingAddChainRequest>(); // 添加网络请求
+	const pendingWatchAssetRequests = new Map<string, PendingWatchAssetRequest>(); // 添加代币请求
+	/**
+	 * 【请求上下文 (RequestContext)】
+	 *
+	 * 这是一个共享的上下文对象，传递给所有 RPC 方法处理器。
+	 * 它提供了：
+	 * - 钱包状态访问方法（getWalletState, getWalletAccounts）
+	 * - Provider 和 Wallet 实例获取（getProvider, getUnlockedWallet）
+	 * - 用户授权流程（requestUserAuth）
+	 * - Popup 管理（openPopup, currentPopupRoute）
+	 * - 所有待处理请求的 Map（用于创建新请求）
+	 *
+	 * 设计目的：避免在处理器之间传递大量参数，提供统一的接口。
+	 */
+	const requestContext: RequestContext = {
+		getWalletState,
+		getWalletAccounts,
+		getProvider,
+		getUnlockedWallet,
+		requestUserAuth: (origin: string) =>
+			requestUserAuth(origin, pendingAuthRequests, openPopup, (route) => {
+				currentPopupRoute = route;
+			}),
+		openPopup,
+		get currentPopupRoute() {
+			return currentPopupRoute;
+		},
+		setCurrentPopupRoute: (route: string) => {
+			currentPopupRoute = route;
+		},
+		pendingAuthRequests,
+		pendingSignRequests,
+		pendingSwitchChainRequests,
+		pendingTransactionRequests,
+		pendingAddChainRequests,
+		pendingWatchAssetRequests,
+	};
+
+	/**
+	 * 【消息监听器 - 核心消息路由】
+	 *
+	 * 这是 Background Script 的消息总入口，处理所有来自其他扩展组件（Content Script、Popup）的消息。
+	 *
+	 * 消息类型分类：
+	 * 1. EIP1193_REQUEST: DApp 的 RPC 请求（通过 Content Script 转发）
+	 * 2. POPUP_*: Popup 路由管理
+	 * 3. AUTH_REQUEST_*: 账户授权确认
+	 * 4. SIGN_REQUEST_*: 签名确认
+	 * 5. SWITCH_CHAIN_REQUEST_*: 网络切换确认
+	 * 6. TRANSACTION_REQUEST_*: 交易确认
+	 * 7. ADD_CHAIN_REQUEST_*: 添加网络确认
+	 * 8. WATCH_ASSET_REQUEST_*: 添加代币确认
+	 * 9. MNEMONIC_*: 助记词管理（仅用于 Popup）
+	 * 10. WALLET_*: 钱包密码管理（仅用于 Popup）
+	 *
+	 * 注意：返回 true 表示异步响应，保持消息通道开放。
+	 */
+
+	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		// Popup 路由管理
+		if (message.type === 'POPUP_GET_ROUTE') {
+			sendResponse({ route: currentPopupRoute || 'main' });
+			return true;
+		}
+	});
+
+	/***********************************************************************************************************************/
+	/**************************************打开插件是否是弹窗还是侧边栏**********************************************************/
+	/***********************************************************************************************************************/
 	let currentMode: AppMode = 'popup';
 	// 启动时加载配置到内存
 	browser.storage.local.get(MODE_STORAGE_KEY).then(({ [MODE_STORAGE_KEY]: mode }) => {
@@ -46,11 +146,11 @@ export default defineBackground(async () => {
 	});
 	const handler = (tab: any) => {
 		// 这里默认都打开弹窗模式
-		if (currentMode === 'sidepanel') {
+		if (currentMode === SIDEPANEL) {
 			// 2. 打开侧边栏（需提供 windowId）
 			const windowId = tab.windowId;
 			browser.sidePanel.open({ windowId });
-		} else {
+		} else if (currentMode === POPUP) {
 			// 3. 打开弹窗
 			// 注意：openPopup 的可用性有限，通常需要配合 action.setPopup 动态设置
 			browser.action.openPopup();

@@ -106,3 +106,23 @@ export interface RequestContext {
 	pendingAddChainRequests: Map<string, PendingAddChainRequest>;
 	pendingWatchAssetRequests: Map<string, PendingWatchAssetRequest>;
 }
+
+export type PopupRoute =
+	| 'main'
+	| 'create'
+	| 'import'
+	| 'unlock'
+	| 'auth'
+	| 'sign'
+	| 'switch-chain'
+	| 'transaction'
+	| 'add-chain'
+	| 'watch-asset'
+	| 'send'
+	| 'receive'
+	| 'networks'
+	| 'add-network'
+	| 'tokens'
+	| 'nfts'
+	| 'send-token'
+	| 'transfer-nft';
