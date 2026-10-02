@@ -8,6 +8,7 @@ import {
 } from '@/utils/mode';
 import './App.css';
 import MainPage from '@/components/mainPage';
+import Root from '@/components/root';
 
 function App() {
 	const [mode, setMode] = useState<AppMode>('popup');
@@ -34,8 +35,8 @@ function App() {
 	}, []);
 
 	return (
-		<div className="wallet-shell">
-			<MainPage />
+		<div className="wallet-shell p-4">
+			<Root />
 			<button
 				className="primary-btn bg-primary-600"
 				onClick={() => switchMode(mode === 'popup' ? 'sidepanel' : 'popup')}

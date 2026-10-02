@@ -26,9 +26,5 @@ body {
 }
 
 .wallet-shell {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
 	width: 360px;
-	padding: 20px;
 }

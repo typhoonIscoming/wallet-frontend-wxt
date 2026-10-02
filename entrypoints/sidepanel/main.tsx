@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { openPopupAndCloseSidePanel, saveAppMode } from '@/utils/mode';
 import './style.css';
-import MainPage from '@/components/mainPage';
+import Root from '@/components/root';
 
 function SidePanelApp() {
 	const switchToPopup = async () => {
@@ -12,7 +12,7 @@ function SidePanelApp() {
 
 	return (
 		<div className="sidepanel-shell">
-			<MainPage />
+			<Root />
 
 			<button className="primary-btn bg-blue-500" onClick={switchToPopup}>
 				切换到弹窗模式

@@ -1,6 +1,6 @@
 export default function MainPage() {
 	return (
-		<div>
+		<div className="w-full">
 			<h1>Main Page</h1>
 		</div>
 	);
