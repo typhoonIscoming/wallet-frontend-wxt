@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser';
-export type AppMode = 'popup' | 'sidepanel';
+import { MODE_STORAGE_KEY } from '@/utils/env';
 
-const MODE_STORAGE_KEY = 'wallet-extension-mode';
+export type AppMode = 'popup' | 'sidepanel';
 
 type StorageArea = {
 	get: (key: string | string[] | null) => Promise<Record<string, any>>;

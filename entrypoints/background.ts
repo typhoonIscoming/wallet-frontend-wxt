@@ -22,6 +22,8 @@
  */
 import { browser } from 'wxt/browser';
 import { applySavedMode, getSavedAppMode } from '@/utils/mode';
+import type { AppMode } from '@/utils/mode';
+import { MODE_STORAGE_KEY } from '@/utils/env';
 import { Buffer } from 'buffer';
 // 在全局作用域提供 Buffer polyfill
 // 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
@@ -31,22 +33,28 @@ if (typeof globalThis.Buffer === 'undefined') {
 
 export default defineBackground(async () => {
 	console.log('Hello background!', { id: browser.runtime.id });
-	console.log('Background script initialized', 'sidePanel' in browser);
-	if ('sidePanel' in browser) {
-		browser.sidePanel
-			.setPanelBehavior({ openPanelOnActionClick: false })
-			.catch((error: unknown) =>
-				console.error('Failed to disable side panel auto-open:', error)
-			);
-	}
-	if ('action' in browser) {
-		const handler = async () => {
-			// const savedMode = await getSavedAppMode();
-			// 这里默认都打开弹窗模式
-			await applySavedMode('popup');
-			console.log('打开弹窗');
-			return;
-		};
-		browser.action.onClicked.addListener(handler);
-	}
+	let currentMode: AppMode = 'popup';
+	// 启动时加载配置到内存
+	browser.storage.local.get(MODE_STORAGE_KEY).then(({ [MODE_STORAGE_KEY]: mode }) => {
+		currentMode = (mode as AppMode) ?? 'popup';
+	});
+	// 监听配置变化，保持内存同步
+	browser.storage.onChanged.addListener((changes, area) => {
+		if (area === 'local' && changes[MODE_STORAGE_KEY]) {
+			currentMode = (changes[MODE_STORAGE_KEY].newValue as AppMode) ?? 'popup';
+		}
+	});
+	const handler = (tab: any) => {
+		// 这里默认都打开弹窗模式
+		if (currentMode === 'sidepanel') {
+			// 2. 打开侧边栏（需提供 windowId）
+			const windowId = tab.windowId;
+			browser.sidePanel.open({ windowId });
+		} else {
+			// 3. 打开弹窗
+			// 注意：openPopup 的可用性有限，通常需要配合 action.setPopup 动态设置
+			browser.action.openPopup();
+		}
+	};
+	browser.action.onClicked.addListener(handler);
 });
