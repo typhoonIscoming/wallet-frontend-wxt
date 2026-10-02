@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
 	font-family: Inter, system-ui, sans-serif;
 	color: #0f172a;
@@ -27,94 +31,4 @@ body {
 	gap: 16px;
 	width: 360px;
 	padding: 20px;
-}
-
-.wallet-header,
-.mode-switcher,
-.wallet-row {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.wallet-header {
-	gap: 12px;
-}
-
-.wallet-badge {
-	display: inline-flex;
-	align-items: center;
-	padding: 6px 10px;
-	background: #111827;
-	color: white;
-	border-radius: 999px;
-	font-size: 11px;
-	font-weight: 700;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-}
-
-.wallet-status {
-	font-size: 12px;
-	color: #475569;
-}
-
-.mode-switcher {
-	gap: 8px;
-}
-
-.mode-switcher button,
-.primary-btn {
-	border: none;
-	border-radius: 12px;
-	padding: 10px 12px;
-	font-size: 13px;
-	font-weight: 700;
-	cursor: pointer;
-}
-
-.mode-switcher button {
-	flex: 1;
-	background: #e2e8f0;
-	color: #0f172a;
-}
-
-.mode-switcher button.active {
-	background: #111827;
-	color: white;
-}
-
-.wallet-card {
-	background: rgba(255, 255, 255, 0.9);
-	border: 1px solid rgba(148, 163, 184, 0.18);
-	border-radius: 18px;
-	padding: 18px;
-	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-}
-
-.wallet-card h2 {
-	margin: 0 0 10px;
-	font-size: 18px;
-}
-
-.wallet-balance {
-	font-size: 28px;
-	font-weight: 700;
-	margin: 14px 0 12px;
-	color: #0f172a;
-}
-
-.wallet-row {
-	padding: 10px 0;
-	border-bottom: 1px solid #e2e8f0;
-	font-size: 13px;
-}
-
-.wallet-row:last-child {
-	border-bottom: none;
-}
-
-.primary-btn {
-	background: linear-gradient(135deg, #6366f1, #8b5cf6);
-	color: white;
 }

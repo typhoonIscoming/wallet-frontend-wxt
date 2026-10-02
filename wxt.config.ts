@@ -1,4 +1,5 @@
 import { defineConfig } from 'wxt';
+// import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
 	modules: ['@wxt-dev/module-react'],
@@ -18,4 +19,8 @@ export default defineConfig({
 			},
 		],
 	},
+	// 以下是tailwindV4的配置方式，V3的方式是+postcss
+	// vite: () => ({
+	// 	plugins: [tailwindcss()],
+	// }),
 });
