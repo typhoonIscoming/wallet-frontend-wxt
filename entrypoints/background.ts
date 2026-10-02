@@ -35,12 +35,15 @@ import type {
 	PendingAddChainRequest,
 	PendingWatchAssetRequest,
 } from '@/entrypoints/background/types';
+import { ProviderErrorCode } from '@/types/eip1193';
+import type { ProviderRpcError } from '@/types/eip1193';
 import getWalletState from '@/entrypoints/background/getWalletState';
 import getWalletAccounts from '@/entrypoints/background/getWalletAccounts';
 import getProvider from '@/entrypoints/background/getProvider';
 import getUnlockedWallet from '@/entrypoints/background/getUnlockedWallet';
 import requestUserAuth from '@/entrypoints/background/requestUserAuth';
 import openPopup from '@/entrypoints/background/popup';
+import handleEIP1193Request from '@/entrypoints/background/router';
 
 // 在全局作用域提供 Buffer polyfill
 // 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
@@ -127,6 +130,60 @@ export default defineBackground(async () => {
 		if (message.type === 'POPUP_GET_ROUTE') {
 			sendResponse({ route: currentPopupRoute || 'main' });
 			return true;
+		}
+		if (message.type === 'POPUP_SET_ROUTE') {
+			const newRoute = message.route;
+			if (newRoute && newRoute !== currentPopupRoute) {
+				currentPopupRoute = newRoute;
+				// 通知所有 popup 实例路由已更改
+				browser.runtime
+					.sendMessage({
+						type: 'POPUP_ROUTE_CHANGED',
+						route: newRoute,
+					})
+					.catch(() => {
+						// 如果没有监听器，忽略错误
+					});
+			}
+			sendResponse({ success: true });
+			return true;
+		}
+
+		/**
+		 * 【EIP-1193 RPC 请求处理】
+		 *
+		 * 这是所有 DApp 交互的入口点。
+		 *
+		 * 处理流程：
+		 * 1. Content Script 接收到页面的 RPC 请求
+		 * 2. Content Script 转发到 Background（EIP1193_REQUEST）
+		 * 3. Background 路由到对应的处理器（router.ts）
+		 * 4. 处理器可能需要用户确认（打开 Popup）
+		 * 5. 返回结果给 Content Script
+		 * 6. Content Script 通过 postMessage 返回给页面
+		 *
+		 * 错误处理：所有错误都会被包装为 ProviderRpcError，符合 EIP-1193 标准。
+		 */
+		if (message.type === 'EIP1193_REQUEST') {
+			console.log('[Background] Received EIP1193_REQUEST:', message.method, message.params);
+			requestContext.sender = sender as any; // 保存发送者信息，用于获取 origin
+			handleEIP1193Request(message.method, message.params, requestContext)
+				.then((result) => {
+					console.log('[Background] EIP1193_REQUEST success:', message.method, result);
+					sendResponse({ success: true, result });
+				})
+				.catch((error: ProviderRpcError) => {
+					console.error('[Background] EIP1193_REQUEST error:', message.method, error);
+					sendResponse({
+						success: false,
+						error: {
+							message: error.message,
+							code: error.code || ProviderErrorCode.UNSUPPORTED_METHOD,
+							data: error.data,
+						},
+					});
+				});
+			return true; // 保持消息通道开放以支持异步响应
 		}
 	});
 

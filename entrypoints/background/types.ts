@@ -2,6 +2,11 @@ import type { WalletState, Network } from '@/types/wallet';
 import type { ethers } from 'ethers';
 import type { ProviderRpcError } from '@/types/eip1193';
 
+// 钱包存储结构类型
+export interface WalletStoreData {
+	state: WalletState;
+	version?: number;
+}
 // 授权请求管理
 export interface PendingAuthRequest {
 	requestId: string;
@@ -35,7 +40,7 @@ export interface PendingSwitchChainRequest {
 	origin: string;
 	chainId: string;
 	targetNetwork: Network | null;
-	resolve: () => void;
+	resolve: (value: PromiseLike<null> | null) => void;
 	reject: (error: ProviderRpcError) => void;
 	timestamp: number;
 }
@@ -66,7 +71,7 @@ export interface PendingAddChainRequest {
 		rpcUrls: string[];
 		blockExplorerUrls?: string[];
 	};
-	resolve: () => void;
+	resolve: (value: PromiseLike<null> | null) => void;
 	reject: (error: ProviderRpcError) => void;
 	timestamp: number;
 }
@@ -84,7 +89,7 @@ export interface PendingWatchAssetRequest {
 			image?: string;
 		};
 	};
-	resolve: () => void;
+	resolve: (value: boolean | PromiseLike<boolean>) => void;
 	reject: (error: ProviderRpcError) => void;
 	timestamp: number;
 }
