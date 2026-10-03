@@ -292,7 +292,7 @@ export const useWalletStore = create<WalletStore>()(
 				});
 
 				// 将密码存储到 background
-				await setPasswordInBackground(password);
+				setPasswordInBackground(password);
 
 				return account;
 			},

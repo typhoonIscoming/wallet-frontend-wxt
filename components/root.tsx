@@ -3,6 +3,7 @@ import useRoute from '@/hooks/useRoute';
 import MainPage from './mainPage';
 import AuthPage from './authPage';
 import CreateWallet from './createWallet';
+import ImportWalletPage from './importWalletPage';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -14,6 +15,8 @@ export default function Root() {
 			return <AuthPage onNavigate={updateRoute} />;
 		case 'create':
 			return <CreateWallet onNavigate={updateRoute} />;
+		case 'import':
+			return <ImportWalletPage onNavigate={updateRoute} />;
 		default:
 			return (
 				<div className="w-full">
