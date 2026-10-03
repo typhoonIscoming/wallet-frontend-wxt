@@ -19,6 +19,7 @@ interface HeaderProps {
 	onBack?: () => void;
 	showRightIcon?: boolean;
 	rightAction?: React.ReactNode;
+	className?: string;
 }
 
 export default function Header({
@@ -27,6 +28,7 @@ export default function Header({
 	onBack,
 	showRightIcon = true,
 	rightAction,
+	className,
 }: HeaderProps) {
 	const { mode } = useContext(RootContext);
 	const switchMode = () => {
@@ -39,9 +41,10 @@ export default function Header({
 			saveAppMode(POPUP as AppMode);
 		}
 	};
-	console.log('mode', mode);
 	return (
-		<div className="header-wrapper w-full flex items-center justify-between">
+		<div
+			className={`header-wrapper w-full flex items-center justify-between ${className || ''}`}
+		>
 			<div className="flex-1 flex items-center">
 				<div className="flex items-center gap-3">
 					{showBack && onBack && (
