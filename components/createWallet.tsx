@@ -13,15 +13,13 @@ export default function CreateWallet({ onNavigate }: CreateWalletProps) {
 
 	return (
 		<div className="w-full">
-			{mode !== SIDEPANEL && (
-				<Header
-					title="创建钱包"
-					showBack
-					onBack={() => {
-						onNavigate('main');
-					}}
-				/>
-			)}
+			<Header
+				title="创建钱包"
+				showBack
+				onBack={() => {
+					onNavigate('main');
+				}}
+			/>
 			<p>Create Wallet Page</p>
 		</div>
 	);

@@ -3,17 +3,12 @@ import ReactDOM from 'react-dom/client';
 import { openPopupAndCloseSidePanel, saveAppMode } from '@/utils/mode';
 import './style.css';
 import Root from '@/components/root';
-import RootContext, { initRootContext } from '@/components/rootContext';
+import RootContext from '@/components/rootContext';
 
 function SidePanelApp() {
-	const switchToPopup = async () => {
-		await saveAppMode('popup');
-		await openPopupAndCloseSidePanel();
-	};
-
 	return (
 		<div className="sidepanel-shell p-4">
-			<RootContext.Provider value={initRootContext}>
+			<RootContext.Provider value={{ mode: 'sidepanel' }}>
 				<Root />
 			</RootContext.Provider>
 		</div>

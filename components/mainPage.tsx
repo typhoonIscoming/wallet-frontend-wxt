@@ -11,16 +11,17 @@ export default function MainPage({ onNavigate }: MainPageProps) {
 	if (accounts.length === 0) {
 		return (
 			<div className="w-full">
-				<div className="pb-4">
+				<Header title="钱包" showBack={false} />
+				<div className="pb-4 mt-4">
 					<div className="space-y-3">
 						<button
-							className="w-full rounded-lg bg-accent px-4 py-3 text-sm font-medium text-black hover:bg-accent-light transition-colors shadow-lg shadow-accent/20"
+							className="w-full rounded-lg bg-accent px-4 py-2 text-sm font-medium text-black hover:bg-accent-light transition-colors shadow-lg shadow-accent/20"
 							onClick={() => onNavigate('create')}
 						>
 							创建新钱包
 						</button>
 						<button
-							className="w-full rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-3 text-sm text-slate-200 hover:bg-slate-800 hover:border-accent/50 transition-colors"
+							className="w-full rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800 hover:border-accent/50 transition-colors"
 							onClick={() => onNavigate('import')}
 						>
 							导入钱包
