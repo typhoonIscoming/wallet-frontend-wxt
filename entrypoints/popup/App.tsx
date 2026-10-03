@@ -7,8 +7,8 @@ import {
 	type AppMode,
 } from '@/utils/mode';
 import './App.css';
-import MainPage from '@/components/mainPage';
 import Root from '@/components/root';
+import RootContext from '@/components/rootContext';
 
 function App() {
 	const [mode, setMode] = useState<AppMode>('popup');
@@ -35,15 +35,11 @@ function App() {
 	}, []);
 
 	return (
-		<div className="wallet-shell p-4">
-			<Root />
-			<button
-				className="primary-btn bg-primary-600"
-				onClick={() => switchMode(mode === 'popup' ? 'sidepanel' : 'popup')}
-			>
-				{mode === 'popup' ? '切换到侧边栏' : '切回弹窗'}
-			</button>
-		</div>
+		<RootContext.Provider value={{ mode }}>
+			<div className="wallet-shell p-4">
+				<Root />
+			</div>
+		</RootContext.Provider>
 	);
 }
 

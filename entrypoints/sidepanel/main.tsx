@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { openPopupAndCloseSidePanel, saveAppMode } from '@/utils/mode';
 import './style.css';
 import Root from '@/components/root';
+import RootContext, { initRootContext } from '@/components/rootContext';
 
 function SidePanelApp() {
 	const switchToPopup = async () => {
@@ -11,12 +12,10 @@ function SidePanelApp() {
 	};
 
 	return (
-		<div className="sidepanel-shell">
-			<Root />
-
-			<button className="primary-btn bg-blue-500" onClick={switchToPopup}>
-				切换到弹窗模式
-			</button>
+		<div className="sidepanel-shell p-4">
+			<RootContext.Provider value={initRootContext}>
+				<Root />
+			</RootContext.Provider>
 		</div>
 	);
 }
