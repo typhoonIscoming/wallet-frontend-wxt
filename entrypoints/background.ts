@@ -45,6 +45,8 @@ import requestUserAuth from '@/entrypoints/background/requestUserAuth';
 import openPopup from '@/entrypoints/background/popup';
 import handleEIP1193Request from '@/entrypoints/background/router';
 
+import setWalletPassword from './background/back-utils';
+
 // 在全局作用域提供 Buffer polyfill
 // 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
 if (typeof globalThis.Buffer === 'undefined') {
@@ -125,7 +127,7 @@ export default defineBackground(async () => {
 	 * 注意：返回 true 表示异步响应，保持消息通道开放。
 	 */
 
-	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	const messageListener = (message: any, sender: any, sendResponse: any) => {
 		// Popup 路由管理
 		if (message.type === 'POPUP_GET_ROUTE') {
 			sendResponse({ route: currentPopupRoute || 'main' });
@@ -185,7 +187,13 @@ export default defineBackground(async () => {
 				});
 			return true; // 保持消息通道开放以支持异步响应
 		}
-	});
+		// 钱包密码管理
+		if (message.type === 'WALLET_SET_PASSWORD') {
+			setWalletPassword({ message, sender, sendResponse });
+			return true;
+		}
+	};
+	browser.runtime.onMessage.addListener(messageListener);
 
 	/***********************************************************************************************************************/
 	/**************************************打开插件是否是弹窗还是侧边栏**********************************************************/

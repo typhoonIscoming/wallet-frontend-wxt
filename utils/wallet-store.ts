@@ -106,6 +106,7 @@ const initialState: WalletState = {
 // 辅助函数：与 background 通信
 const setPasswordInBackground = async (password: string): Promise<void> => {
 	return new Promise((resolve, reject) => {
+		// 在运行时才能触发
 		browser.runtime.sendMessage(
 			{
 				type: 'WALLET_SET_PASSWORD',
@@ -215,15 +216,19 @@ export const useWalletStore = create<WalletStore>()(
 			createWallet: async (password: string) => {
 				// 生成助记词
 				const mnemonic = bip39.generateMnemonic();
+				// console.log('Generated mnemonic:', mnemonic);
 				// 生成种子
 				const seedBuffer = await bip39.mnemonicToSeed(mnemonic);
+				// console.log('Generated seed buffer:', seedBuffer);
 				// 转成 Uint8Array
 				const seed = new Uint8Array(seedBuffer);
-
+				// console.log('Generated seed:', seed);
 				// 生成钱包
 				const hdNode = ethers.HDNodeWallet.fromSeed(seed);
+				// console.log('Generated HD Node:', hdNode);
 				// 生成账户
 				const wallet = hdNode.derivePath("m/44'/60'/0'/0/0");
+				// console.log('Derived wallet:', wallet);
 
 				const account: WalletAccount = {
 					address: wallet.address,
@@ -231,13 +236,16 @@ export const useWalletStore = create<WalletStore>()(
 					name: 'Account 1',
 					index: 0,
 				};
+				// console.log('Created account:', account);
 
 				// Encrypt sensitive data
 				const encryptedMnemonic = AES.encrypt(mnemonic, password).toString();
 				const encryptedPrivateKey = AES.encrypt(wallet.privateKey, password).toString();
-
+				// console.log('Encrypted mnemonic:', encryptedMnemonic);
+				// console.log('Encrypted private key:', encryptedPrivateKey);
 				// 创建加密后的账户对象
 				const encryptedAccount = { ...account, privateKey: encryptedPrivateKey };
+				// console.log('Encrypted account:', encryptedAccount);
 
 				set({
 					isLocked: false,
@@ -246,10 +254,8 @@ export const useWalletStore = create<WalletStore>()(
 					mnemonic: encryptedMnemonic,
 					password: SHA256(password).toString(),
 				});
-
 				// 将密码存储到 background
-				await setPasswordInBackground(password);
-
+				setPasswordInBackground(password);
 				return { mnemonic, account };
 			},
 
