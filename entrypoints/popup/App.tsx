@@ -22,10 +22,7 @@ function App() {
 
 	return (
 		<RootContext.Provider value={{ mode }}>
-			<div
-				className="wallet-shell max-h-[60vh] overflow-auto"
-				style={{ scrollbarWidth: 'none' }}
-			>
+			<div className="wallet-shell overflow-auto" style={{ scrollbarWidth: 'none' }}>
 				<Root />
 			</div>
 		</RootContext.Provider>

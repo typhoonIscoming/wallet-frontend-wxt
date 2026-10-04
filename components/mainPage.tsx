@@ -280,10 +280,10 @@ export default function MainPage({ onNavigate }: MainPageProps) {
 													key={`${w}-${i}`}
 													className="rounded-lg border border-slate-800 bg-gray-500 px-2 py-2"
 												>
-													<div className="text-[14px] text-black">
+													<div className="text-[14px] text-white">
 														{i + 1}
 													</div>
-													<div className="mt-1 truncate text-sm font-medium">
+													<div className="mt-1 truncate text-white text-sm font-medium">
 														{w}
 													</div>
 												</div>

@@ -87,7 +87,7 @@ export default function SendPage({ onNavigate }: SendPageProps) {
 	};
 
 	return (
-		<div className="min-h-full w-[360px]">
+		<div className="min-h-full">
 			<Header
 				title="发送"
 				className="p-2 bg-white sticky top-0 z-999"

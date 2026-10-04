@@ -7,7 +7,7 @@ import RootContext from '@/components/rootContext';
 
 function SidePanelApp() {
 	return (
-		<div className="sidepanel-shell p-2">
+		<div className="sidepanel-shell">
 			<RootContext.Provider value={{ mode: 'sidepanel' }}>
 				<Root />
 			</RootContext.Provider>
