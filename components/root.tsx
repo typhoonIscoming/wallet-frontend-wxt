@@ -4,24 +4,23 @@ import MainPage from './mainPage';
 import AuthPage from './authPage';
 import CreateWallet from './createWallet';
 import ImportWalletPage from './importWalletPage';
+import UnlockPage from './unlock';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
 	console.log('route', route);
 	switch (route) {
-		case 'main':
-			return <MainPage onNavigate={updateRoute} />;
 		case 'auth':
 			return <AuthPage onNavigate={updateRoute} />;
 		case 'create':
 			return <CreateWallet onNavigate={updateRoute} />;
 		case 'import':
 			return <ImportWalletPage onNavigate={updateRoute} />;
+		case 'unlock':
+			return <UnlockPage onNavigate={updateRoute} />;
+		case 'main':
+			return <MainPage onNavigate={updateRoute} />;
 		default:
-			return (
-				<div className="w-full">
-					<p>Root Component</p>
-				</div>
-			);
+			return <MainPage onNavigate={updateRoute} />;
 	}
 }

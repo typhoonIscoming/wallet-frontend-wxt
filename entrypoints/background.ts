@@ -45,7 +45,7 @@ import requestUserAuth from '@/entrypoints/background/requestUserAuth';
 import openPopup from '@/entrypoints/background/popup';
 import handleEIP1193Request from '@/entrypoints/background/router';
 
-import setWalletPassword from './background/back-utils';
+import setWalletPassword, { getWalletPassword } from './background/back-utils';
 
 // 在全局作用域提供 Buffer polyfill
 // 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
@@ -190,6 +190,10 @@ export default defineBackground(async () => {
 		// 钱包密码管理
 		if (message.type === 'WALLET_SET_PASSWORD') {
 			setWalletPassword({ message, sender, sendResponse });
+			return true;
+		}
+		if (message.type === 'WALLET_GET_PASSWORD') {
+			getWalletPassword({ message, sender, sendResponse });
 			return true;
 		}
 	};

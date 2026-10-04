@@ -215,12 +215,27 @@ export const useWalletStore = create<WalletStore>()(
 
 			createWallet: async (password: string) => {
 				// 生成助记词
+				/**
+				 * 原理:生成助记词(BIP39 标准)
+					内部先从系统安全的熵源(CSPRNG,密码学安全随机数生成器)生成 128 位随机熵(默认强度)。
+					将熵计算 SHA-256 校验和,取校验和的前 4 位(128/32 = 4)。
+					把 熵 + 校验和 拼接后,按每 11 位 一组切分,共 (128+4)/11 = 12 组。
+					每组 11 位的数值(0~2047)作为下标,去 2048 个单词的 BIP39 词表中查对应单词。
+					最终得到 12 个英文单词,即助记词,例如 abandon ability able ...。
+					核心思想:把不可读的随机二进制,编码成人可抄写、可校验的人性化单词。
+				 */
 				const mnemonic = bip39.generateMnemonic();
 				// console.log('Generated mnemonic:', mnemonic);
 				// 生成种子
 				const seedBuffer = await bip39.mnemonicToSeed(mnemonic);
 				// console.log('Generated seed buffer:', seedBuffer);
 				// 转成 Uint8Array
+				/**
+				 * 原理:Buffer → Uint8Array 类型转换
+bip39 库返回的 seedBuffer 在 Node 环境里是 Node.js 的 Buffer 对象。
+Buffer 本质是 Uint8Array 的子类,但为了跨环境兼容(浏览器里没有 Buffer),显式转换成标准的 Uint8Array。
+这一步不改变数据内容,只是换了个更通用的类型,方便 ethers 库接收。
+				*/
 				const seed = new Uint8Array(seedBuffer);
 				// console.log('Generated seed:', seed);
 				// 生成钱包
@@ -341,7 +356,7 @@ export const useWalletStore = create<WalletStore>()(
 				if (state.password === hashedPassword) {
 					set({ isLocked: false });
 					// 将密码存储到 background
-					await setPasswordInBackground(password);
+					setPasswordInBackground(password);
 					return true;
 				}
 				return false;
@@ -350,7 +365,7 @@ export const useWalletStore = create<WalletStore>()(
 			lockWallet: async () => {
 				set({ isLocked: true });
 				// 清除 background 中的密码
-				await clearPasswordInBackground();
+				clearPasswordInBackground();
 			},
 
 			createAccount: async (name?: string) => {

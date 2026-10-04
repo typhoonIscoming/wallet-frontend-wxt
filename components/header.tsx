@@ -1,7 +1,7 @@
 /**
  * 通用 Header 组件，包含 Logo
  */
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import logo from '@/public/wxt.svg';
 import { HoverCard, HoverCardTrigger, HoverCardContent, HoverCardPortal } from './hoverCard';
 import RootContext from './rootContext';
@@ -41,6 +41,10 @@ export default function Header({
 			saveAppMode(POPUP as AppMode);
 		}
 	};
+	let right = null;
+	if (React.isValidElement(rightAction)) {
+		right = rightAction;
+	}
 	return (
 		<div
 			className={`header-wrapper w-full flex items-center justify-between ${className || ''}`}
@@ -105,6 +109,7 @@ export default function Header({
 										<ArrowLeftRight />
 										{mode === POPUP ? '侧边栏模式' : '弹窗模式'}
 									</div>
+									{right}
 								</div>
 							</HoverCardContent>
 						</HoverCardPortal>

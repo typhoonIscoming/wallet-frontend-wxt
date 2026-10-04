@@ -35,3 +35,25 @@ export default async function setWalletPassword({
 		});
 	}
 }
+
+export async function getWalletPassword({
+	message,
+	sendResponse = noon,
+}: WalletPasswordMessage): Promise<void> {
+	try {
+		const result = await browser.storage.local.get('walletPassword');
+		const password = result.walletPassword || null;
+		console.log(
+			'[Background] WALLET_GET_PASSWORD: Password retrieved, hasPassword:',
+			!!password,
+			'length:',
+			password ? (password as string).length : 0
+		);
+		sendResponse({ password });
+	} catch (e) {
+		console.error('[Background] WALLET_GET_PASSWORD: Error:', e);
+		sendResponse({
+			error: e instanceof Error ? e.message : '获取密码失败',
+		});
+	}
+}
