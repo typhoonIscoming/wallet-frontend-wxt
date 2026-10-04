@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import useRoute from '@/hooks/useRoute';
 import { useWalletStore } from '@/utils/wallet-store';
 import type { PopupRoute, SwitchChainRequest } from '@/entrypoints/background/types';
 import Header from './header';
@@ -16,6 +17,8 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 		handleSwitchChainApprove,
 		handleSwitchChainReject,
 	} = useSwitchChain();
+	const { route } = useRoute();
+
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
 
@@ -24,6 +27,7 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 		setError(null);
 		try {
 			await handleSwitchChainReject();
+			onNavigate('main');
 		} catch (err) {
 			setError('切换网络失败，请重试。');
 		} finally {
@@ -43,23 +47,43 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 		}
 	};
 
+	useEffect(() => {
+		if (route === 'switch-chain') {
+			fetchSwitchChainRequest();
+		}
+	}, [route, fetchSwitchChainRequest]);
+
 	if (!switchChainRequest) {
 		return (
-			<div className="min-h-full w-[360px] bg-black text-slate-100">
-				<Header title="切换网络" />
-				<div className="px-4 pt-6 pb-4">
-					<div className="text-sm text-slate-400 mb-4">等待切换网络请求...</div>
+			<div className="min-h-full w-full">
+				<Header
+					title="切换网络"
+					className="p-2"
+					showBack
+					onBack={() => onNavigate('main')}
+				/>
+				<div className="px-2 pb-4">
+					<div className="text-sm rounded-xl bg-slate-200 py-6 text-slate-900 text-center mb-4">
+						等待切换网络请求...
+					</div>
 				</div>
 			</div>
 		);
 	}
 
-	if (!switchChainRequest.targetNetwork) {
+	if (!switchChainRequest?.targetNetwork) {
 		return (
-			<div className="min-h-full w-[360px] bg-black text-slate-100">
-				<Header title="切换网络" />
-				<div className="px-4 pt-6 pb-4">
-					<div className="text-sm text-red-400 mb-4">目标网络不存在</div>
+			<div className="min-h-full w-full">
+				<Header
+					title="切换网络"
+					showBack
+					className="p-2"
+					onBack={() => onNavigate('main')}
+				/>
+				<div className="px-2 pt-0 pb-4">
+					<div className="text-sm rounded-xl px-2 text-center py-6 bg-slate-200 text-slate-900 mb-4">
+						目标网络不存在
+					</div>
 					<button
 						className="w-full rounded-lg bg-accent px-4 py-2 text-sm font-medium text-black hover:bg-accent-light transition-colors shadow-lg shadow-accent/20"
 						onClick={onReject}
@@ -73,7 +97,7 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 
 	return (
 		<div className="min-h-full w-[360px] bg-black text-slate-100">
-			<Header title="切换网络" />
+			<Header title="切换网络" showBack className="p-2" onBack={() => onNavigate('main')} />
 			<div className="px-4 pt-4 pb-4">
 				<div className="text-sm text-slate-400 mb-4">以下网站想要切换您的网络</div>
 
@@ -81,7 +105,7 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 					<div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
 						<div className="text-xs text-slate-400 mb-1">网站</div>
 						<div className="text-sm font-medium text-slate-100 break-all">
-							{switchChainRequest.origin}
+							{switchChainRequest?.origin}
 						</div>
 					</div>
 
@@ -98,11 +122,11 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 					<div className="rounded-xl border border-accent/30 bg-accent/10 p-4">
 						<div className="text-xs text-accent mb-2">目标网络</div>
 						<div className="text-sm font-medium text-slate-100">
-							{switchChainRequest.targetNetwork.name}
+							{switchChainRequest?.targetNetwork?.name}
 						</div>
 						<div className="text-xs text-accent/80 mt-1">
-							Chain ID: {switchChainRequest.targetNetwork.chainId} •{' '}
-							{switchChainRequest.targetNetwork.currencySymbol}
+							Chain ID: {switchChainRequest?.targetNetwork?.chainId} •{' '}
+							{switchChainRequest?.targetNetwork?.currencySymbol}
 						</div>
 					</div>
 

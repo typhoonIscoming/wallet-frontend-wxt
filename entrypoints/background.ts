@@ -196,6 +196,19 @@ export default defineBackground(async () => {
 			getWalletPassword({ message, sender, sendResponse });
 			return true;
 		}
+		// 处理切换网络请求相关消息
+		if (message.type === 'SWITCH_CHAIN_REQUEST_GET') {
+			// 获取待处理的切换网络请求
+			const requests = Array.from(pendingSwitchChainRequests.values()).map((req) => ({
+				requestId: req.requestId,
+				origin: req.origin,
+				chainId: req.chainId,
+				targetNetwork: req.targetNetwork,
+				timestamp: req.timestamp,
+			}));
+			sendResponse({ requests });
+			return true;
+		}
 	};
 	browser.runtime.onMessage.addListener(messageListener);
 

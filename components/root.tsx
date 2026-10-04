@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import useRoute from '@/hooks/useRoute';
+import useSwitchChain from '@/hooks/useSwitchChain';
 import MainPage from './mainPage';
 import AuthPage from './authPage';
 import CreateWallet from './createWallet';
@@ -11,7 +12,13 @@ import SwitchChainPage from './switchNetwork';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
+	const { fetchSwitchChainRequest } = useSwitchChain();
 	console.log('route', route);
+	useEffect(() => {
+		if (route === 'switch-chain') {
+			fetchSwitchChainRequest();
+		}
+	}, [route, fetchSwitchChainRequest]);
 	switch (route) {
 		case 'auth':
 			return <AuthPage onNavigate={updateRoute} />;

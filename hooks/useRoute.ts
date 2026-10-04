@@ -4,7 +4,7 @@ import { browser } from 'wxt/browser';
 import type { PopupRoute } from '@/entrypoints/background/types';
 
 export default function useRoute() {
-	const [route, setRoute] = useState<PopupRoute>('main');
+	const [route, setRoute] = useState<PopupRoute>('switch-chain');
 	const isAutoRoutingRef = useRef(false);
 	const hasRuntime =
 		!!browser?.runtime && !!browser.runtime.sendMessage && !!browser.runtime.onMessage;
