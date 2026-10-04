@@ -93,8 +93,8 @@ export default function MainPage({ onNavigate }: MainPageProps) {
 	if (accounts.length === 0) {
 		return (
 			<div className="w-full">
-				<Header title="钱包" showBack={false} />
-				<div className="pb-4 mt-4">
+				<Header title="钱包" showBack={false} className="p-2 bg-white sticky top-0 z-9" />
+				<div className="px-2 pb-4 mt-4">
 					<div className="space-y-3">
 						<button
 							className="w-full rounded-lg bg-accent px-4 py-2 text-sm font-medium text-black hover:bg-accent-light transition-colors shadow-lg shadow-accent/20"
@@ -115,9 +115,13 @@ export default function MainPage({ onNavigate }: MainPageProps) {
 	}
 	return (
 		<div className="w-full">
-			<Header title="钱包" rightAction={<UnlockItem />} />
+			<Header
+				title="钱包"
+				rightAction={<UnlockItem />}
+				className="p-2 bg-white sticky top-0 z-9"
+			/>
 			{currentAccount && (
-				<div className="mt-2">
+				<div className="mt-0 px-2">
 					<div className="pt-4 pb-4">
 						{/* 余额显示 */}
 						<div className="rounded-xl border border-gray-100 bg-[#f3f3f3] p-4 mb-3 backdrop-blur-sm">

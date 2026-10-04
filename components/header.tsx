@@ -47,7 +47,8 @@ export default function Header({
 	}
 	return (
 		<div
-			className={`header-wrapper w-full flex items-center justify-between ${className || ''}`}
+			className={`header-wrapper w-full flex items-center justify-center ${className || ''}`}
+			style={{ zIndex: 999 }}
 		>
 			<div className="flex-1 flex items-center">
 				<div className="flex items-center gap-3">
@@ -78,43 +79,41 @@ export default function Header({
 				</div>
 			</div>
 			{showRightIcon && (
-				<div>
-					<HoverCard triggerMode="click">
-						<HoverCardPortal>
-							<HoverCardTrigger className="text-sm font-medium text-slate-700">
-								<span className="cursor-pointer">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										className="lucide lucide-settings preview-icon"
-									>
-										<path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
-										<circle cx="12" cy="12" r="3" />
-									</svg>
-								</span>
-							</HoverCardTrigger>
-							<HoverCardContent className="w-[150px] p-[8px]">
-								<div className="space-y-2">
-									<div
-										className="flex cursor-pointer p-[4px] hover:bg-[#e8e8e8] items-center gap-2"
-										onClick={switchMode}
-									>
-										<ArrowLeftRight />
-										{mode === POPUP ? '侧边栏模式' : '弹窗模式'}
-									</div>
-									{right}
+				<HoverCard triggerMode="click">
+					<HoverCardPortal>
+						<HoverCardTrigger className="text-sm font-medium text-slate-700">
+							<span className="cursor-pointer">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									className="lucide lucide-settings preview-icon"
+								>
+									<path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+									<circle cx="12" cy="12" r="3" />
+								</svg>
+							</span>
+						</HoverCardTrigger>
+						<HoverCardContent className="w-[150px] p-[8px]">
+							<div className="space-y-2">
+								<div
+									className="flex cursor-pointer p-[4px] hover:bg-[#e8e8e8] items-center gap-2"
+									onClick={switchMode}
+								>
+									<ArrowLeftRight />
+									{mode === POPUP ? '侧边栏模式' : '弹窗模式'}
 								</div>
-							</HoverCardContent>
-						</HoverCardPortal>
-					</HoverCard>
-				</div>
+								{right}
+							</div>
+						</HoverCardContent>
+					</HoverCardPortal>
+				</HoverCard>
 			)}
 		</div>
 	);

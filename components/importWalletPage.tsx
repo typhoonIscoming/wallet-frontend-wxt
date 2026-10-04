@@ -53,9 +53,10 @@ export default function ImportWalletPage({ onNavigate }: ImportWalletPageProps) 
 					onImportMnemonicChange('');
 					onPasswordChange('');
 				}}
+				className="p-2 bg-white sticky top-0 z-99"
 			/>
 
-			<div className="pt-6 pb-4">
+			<div className="px-2 pt-6 pb-4">
 				<div className="space-y-4">
 					<div>
 						<div className="text-sm text-black mb-2">助记词</div>

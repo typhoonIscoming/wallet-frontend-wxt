@@ -63,7 +63,7 @@ export default function CreateWallet({ onNavigate }: CreateWalletProps) {
 
 	const showMnemonic = () => {
 		return (
-			<div className="space-y-4">
+			<div className="space-y-4 px-2">
 				<div className="rounded-xl border border-yellow-900/40 bg-yellow-950/20 p-4">
 					<div className="text-sm font-medium text-yellow-200 mb-2">
 						⚠️ 请妥善保管助记词
@@ -104,7 +104,7 @@ export default function CreateWallet({ onNavigate }: CreateWalletProps) {
 	};
 	const showCreateWalletForm = () => {
 		return (
-			<div className="space-y-4">
+			<div className="space-y-4 px-2">
 				<div>
 					<div className="text-sm mb-2">设置密码</div>
 					<input
@@ -151,7 +151,7 @@ export default function CreateWallet({ onNavigate }: CreateWalletProps) {
 				onBack={() => {
 					onNavigate('main');
 				}}
-				className="mb-2"
+				className="mb-2 p-2 bg-white sticky top-0 z-9"
 			/>
 			{newMnemonic ? showMnemonic() : showCreateWalletForm()}
 		</div>
