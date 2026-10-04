@@ -41,8 +41,8 @@ export default function UnlockPage({ onNavigate }: UnlockPageProps) {
 
 	return (
 		<div className="min-h-full w-[360px] text-slate-100">
-			<Header title="解锁钱包" />
-			<div className="pt-6 pb-4">
+			<Header title="解锁钱包" className="p-2 bg-white sticky top-0" />
+			<div className="px-2 pt-6 pb-4">
 				<div className="text-sm text-gray-600 mb-2">请输入密码以解锁钱包</div>
 				<div className="space-y-4">
 					<div>

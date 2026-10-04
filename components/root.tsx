@@ -5,6 +5,8 @@ import AuthPage from './authPage';
 import CreateWallet from './createWallet';
 import ImportWalletPage from './importWalletPage';
 import UnlockPage from './unlock';
+import SendPage from './sendPage';
+import NetworksPage from './network';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -18,6 +20,10 @@ export default function Root() {
 			return <ImportWalletPage onNavigate={updateRoute} />;
 		case 'unlock':
 			return <UnlockPage onNavigate={updateRoute} />;
+		case 'send':
+			return <SendPage onNavigate={updateRoute} />;
+		case 'networks':
+			return <NetworksPage onNavigate={updateRoute} />;
 		case 'main':
 			return <MainPage onNavigate={updateRoute} />;
 		default:

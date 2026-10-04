@@ -160,8 +160,11 @@ export default function MainPage({ onNavigate }: MainPageProps) {
 						{/* 操作按钮 */}
 						<div className="grid grid-cols-2 gap-3 mb-3">
 							<button
-								className="rounded-lg bg-accent px-4 py-3 text-sm font-medium text-black hover:bg-accent-light transition-colors shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
-								onClick={() => onNavigate('send')}
+								className="rounded-lg cursor-pointer disabled:cursor-not-allowed bg-accent px-4 py-3 text-sm font-medium text-black hover:bg-accent-light disabled:hover:bg-accent-dark transition-colors shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
+								onClick={() => {
+									console.log('send');
+									onNavigate('send');
+								}}
 								disabled={isLocked}
 							>
 								<svg
