@@ -442,6 +442,7 @@ Buffer 本质是 Uint8Array 的子类,但为了跨环境兼容(浏览器里没�
 			switchNetwork: (networkId: string) => {
 				const state = get();
 				const network = state.networks.find((net) => net.id === networkId);
+				console.log('network', network);
 				if (network) {
 					set({ currentNetwork: network });
 				}

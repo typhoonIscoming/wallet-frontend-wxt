@@ -53,7 +53,7 @@ export default function MainPage({ onNavigate }: MainPageProps) {
 	const { balance, balanceLoading } = useBalance();
 	const [revealed, setRevealed] = useState(false);
 	const [savedMnemonic, setSavedMnemonic] = useState<string | null>(null);
-	// console.log('accounts', accounts, mnemonic);
+	console.log('currentNetwork', currentNetwork, 'accounts', accounts, 'mnemonic', mnemonic);
 	// 获取已保存的助记词（解密）
 	const getDecryptedMnemonic = async () => {
 		console.log('getDecryptedMnemonic called', mnemonic);

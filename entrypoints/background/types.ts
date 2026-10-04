@@ -131,3 +131,16 @@ export type PopupRoute =
 	| 'nfts'
 	| 'send-token'
 	| 'transfer-nft';
+
+export interface SwitchChainRequest {
+	requestId: string;
+	origin: string;
+	chainId: string;
+	targetNetwork: {
+		id: string;
+		name: string;
+		chainId: number;
+		currencySymbol: string;
+	} | null;
+	timestamp: number;
+}

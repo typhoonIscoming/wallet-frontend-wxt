@@ -29,7 +29,7 @@ export default function NetworksPage({ onNavigate }: NetworksPageProps) {
 				method: 'wallet_switchEthereumChain',
 				params: [{ chainId: chainIdHex }],
 			});
-
+			console.log('responseresponse', response);
 			if (response?.success && response.result === null) {
 				switchNetwork(networkId);
 				onNavigate('main');

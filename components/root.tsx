@@ -7,6 +7,7 @@ import ImportWalletPage from './importWalletPage';
 import UnlockPage from './unlock';
 import SendPage from './sendPage';
 import NetworksPage from './network';
+import SwitchChainPage from './switchNetwork';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -24,6 +25,8 @@ export default function Root() {
 			return <SendPage onNavigate={updateRoute} />;
 		case 'networks':
 			return <NetworksPage onNavigate={updateRoute} />;
+		case 'switch-chain':
+			return <SwitchChainPage onNavigate={updateRoute} />;
 		case 'main':
 			return <MainPage onNavigate={updateRoute} />;
 		default:

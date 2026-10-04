@@ -87,7 +87,8 @@ export const DEFAULT_NETWORKS: Network[] = [
 	{
 		id: 'ethereum-mainnet',
 		name: 'Ethereum Mainnet',
-		rpcUrl: 'https://eth.llamarpc.com',
+		// rpcUrl: 'https://eth.llamarpc.com',
+		rpcUrl: 'https://mainnet.infura.io/v3/b122488eb350495783860d44c3d5689c',
 		chainId: 1,
 		currencySymbol: 'ETH',
 		blockExplorerUrl: 'https://etherscan.io',
@@ -95,7 +96,8 @@ export const DEFAULT_NETWORKS: Network[] = [
 	{
 		id: 'ethereum-sepolia',
 		name: 'Sepolia Testnet',
-		rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
+		// rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
+		rpcUrl: 'https://sepolia.infura.io/v3/b122488eb350495783860d44c3d5689c',
 		chainId: 11155111,
 		currencySymbol: 'ETH',
 		blockExplorerUrl: 'https://sepolia.etherscan.io',
@@ -103,7 +105,8 @@ export const DEFAULT_NETWORKS: Network[] = [
 	{
 		id: 'polygon-mainnet',
 		name: 'Polygon',
-		rpcUrl: 'https://polygon-rpc.com',
+		// rpcUrl: 'https://polygon-rpc.com',
+		rpcUrl: 'https://polygon-mainnet.infura.io/v3/b122488eb350495783860d44c3d5689c',
 		chainId: 137,
 		currencySymbol: 'MATIC',
 		blockExplorerUrl: 'https://polygonscan.com',
@@ -111,7 +114,8 @@ export const DEFAULT_NETWORKS: Network[] = [
 	{
 		id: 'optimism-mainnet',
 		name: 'Optimism',
-		rpcUrl: 'https://mainnet.optimism.io',
+		// rpcUrl: 'https://mainnet.optimism.io',
+		rpcUrl: 'https://optimism-mainnet.infura.io/v3/b122488eb350495783860d44c3d5689c',
 		chainId: 10,
 		currencySymbol: 'ETH',
 		blockExplorerUrl: 'https://optimistic.etherscan.io',
@@ -119,7 +123,8 @@ export const DEFAULT_NETWORKS: Network[] = [
 	{
 		id: 'bsc-mainnet',
 		name: 'BNB Smart Chain',
-		rpcUrl: 'https://bsc-dataseed.binance.org',
+		// rpcUrl: 'https://bsc-dataseed.binance.org',
+		rpcUrl: 'https://bsc-mainnet.infura.io/v3/b122488eb350495783860d44c3d5689c',
 		chainId: 56,
 		currencySymbol: 'BNB',
 		blockExplorerUrl: 'https://bscscan.com',
