@@ -9,6 +9,7 @@ import UnlockPage from './unlock';
 import SendPage from './sendPage';
 import NetworksPage from './network';
 import SwitchChainPage from './switchNetwork';
+import ReceivePage from './receivePage';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -34,6 +35,8 @@ export default function Root() {
 			return <NetworksPage onNavigate={updateRoute} />;
 		case 'switch-chain':
 			return <SwitchChainPage onNavigate={updateRoute} />;
+		case 'receive':
+			return <ReceivePage onNavigate={updateRoute} />;
 		case 'main':
 			return <MainPage onNavigate={updateRoute} />;
 		default:
