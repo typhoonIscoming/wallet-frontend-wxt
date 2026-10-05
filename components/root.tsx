@@ -16,7 +16,7 @@ import NFTsPage from './nftsPage';
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
 	const { fetchSwitchChainRequest } = useSwitchChain();
-	console.log('route', route);
+	// console.log('route', route);
 	useEffect(() => {
 		if (route === 'switch-chain') {
 			fetchSwitchChainRequest();
