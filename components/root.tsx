@@ -13,6 +13,7 @@ import ReceivePage from './receivePage';
 import TokensPage from './tokensPage';
 import NFTsPage from './nftsPage';
 import AddNetworkPage from './addNetwork';
+import SendTokenPage from './sendTokenPage';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -46,6 +47,8 @@ export default function Root() {
 			return <NFTsPage onNavigate={updateRoute} />;
 		case 'add-network':
 			return <AddNetworkPage onNavigate={updateRoute} />;
+		case 'send-token':
+			return <SendTokenPage onNavigate={updateRoute} />;
 		case 'main':
 			return <MainPage onNavigate={updateRoute} />;
 		default:
