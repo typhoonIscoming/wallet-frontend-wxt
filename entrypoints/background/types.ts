@@ -144,3 +144,18 @@ export interface SwitchChainRequest {
 	} | null;
 	timestamp: number;
 }
+
+export interface WatchAssetRequest {
+	requestId: string;
+	origin: string;
+	assetParams: {
+		type: string;
+		options: {
+			address: string;
+			symbol?: string;
+			decimals?: number;
+			image?: string;
+		};
+	};
+	timestamp: number;
+}
