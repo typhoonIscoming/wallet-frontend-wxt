@@ -46,6 +46,7 @@ import openPopup from '@/entrypoints/background/popup';
 import handleEIP1193Request from '@/entrypoints/background/router';
 
 import setWalletPassword, { getWalletPassword } from './background/back-utils';
+import handleSwitchChainRequestApprove from './background/switch-chain-handler';
 
 // 在全局作用域提供 Buffer polyfill
 // 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
@@ -207,6 +208,13 @@ export default defineBackground(async () => {
 				timestamp: req.timestamp,
 			}));
 			sendResponse({ requests });
+			return true;
+		}
+		if (message.type === 'SWITCH_CHAIN_REQUEST_APPROVE') {
+			// 用户批准切换网络请求
+			const { requestId } = message;
+			handleSwitchChainRequestApprove(requestId, pendingSwitchChainRequests);
+			sendResponse({ success: true });
 			return true;
 		}
 	};
