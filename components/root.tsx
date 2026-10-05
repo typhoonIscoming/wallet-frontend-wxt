@@ -10,6 +10,7 @@ import SendPage from './sendPage';
 import NetworksPage from './network';
 import SwitchChainPage from './switchNetwork';
 import ReceivePage from './receivePage';
+import TokensPage from './tokensPage';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -37,6 +38,8 @@ export default function Root() {
 			return <SwitchChainPage onNavigate={updateRoute} />;
 		case 'receive':
 			return <ReceivePage onNavigate={updateRoute} />;
+		case 'tokens':
+			return <TokensPage onNavigate={updateRoute} />;
 		case 'main':
 			return <MainPage onNavigate={updateRoute} />;
 		default:
