@@ -12,6 +12,7 @@ import SwitchChainPage from './switchNetwork';
 import ReceivePage from './receivePage';
 import TokensPage from './tokensPage';
 import NFTsPage from './nftsPage';
+import AddNetworkPage from './addNetwork';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -43,6 +44,8 @@ export default function Root() {
 			return <TokensPage onNavigate={updateRoute} />;
 		case 'nfts':
 			return <NFTsPage onNavigate={updateRoute} />;
+		case 'add-network':
+			return <AddNetworkPage onNavigate={updateRoute} />;
 		case 'main':
 			return <MainPage onNavigate={updateRoute} />;
 		default:
