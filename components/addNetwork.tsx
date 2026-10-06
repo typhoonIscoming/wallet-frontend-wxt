@@ -4,12 +4,15 @@
 import { useState } from 'react';
 import type { PopupRoute } from '@/entrypoints/background/types';
 import Header from './header';
+import { useWalletStore } from '@/utils/wallet-store';
 
 interface AddNetworkPageProps {
 	onNavigate: (route: PopupRoute) => void;
 }
 
 export default function AddNetworkPage({ onNavigate }: AddNetworkPageProps) {
+	const { networks, addNetwork } = useWalletStore();
+
 	const [chainId, setChainId] = useState('');
 	const [name, setName] = useState('');
 	const [rpcUrl, setRpcUrl] = useState('');
@@ -18,7 +21,90 @@ export default function AddNetworkPage({ onNavigate }: AddNetworkPageProps) {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const onAddNetwork = () => {};
+	const onAddNetwork = async () => {
+		if (!chainId || !name || !rpcUrl || !currencySymbol) {
+			setError('请填写所有必填字段');
+			return;
+		}
+		let chainIdHex: string;
+		if (chainId.startsWith('0x')) {
+			chainIdHex = chainId;
+		} else {
+			const chainIdNum = parseInt(chainId, 10);
+			if (isNaN(chainIdNum)) {
+				setError('Chain ID 格式无效');
+				return;
+			}
+			chainIdHex = '0x' + chainIdNum.toString(16);
+		}
+		setLoading(true);
+		setError(null);
+		try {
+			const chainParams: {
+				chainId: string;
+				chainName: string;
+				nativeCurrency: {
+					name: string;
+					symbol: string;
+					decimals: number;
+				};
+				rpcUrls: string[];
+				blockExplorerUrls?: string[];
+			} = {
+				chainId: chainIdHex,
+				chainName: name,
+				nativeCurrency: {
+					name: currencySymbol,
+					symbol: currencySymbol,
+					decimals: 18,
+				},
+				rpcUrls: [rpcUrl],
+			};
+			if (blockExplorer) {
+				chainParams.blockExplorerUrls = [blockExplorer];
+			}
+			const response = await browser.runtime.sendMessage({
+				type: 'EIP1193_REQUEST',
+				method: 'wallet_addEthereumChain',
+				params: [chainParams],
+			});
+
+			if (response?.success && response.result === null) {
+				// 从 storage 重新获取网络列表并更新到 store
+				const storage = browser.storage.local;
+				const result = (await storage.get('wallet-store')) as {
+					'wallet-store'?: { state?: { networks?: any[] } };
+				};
+				const walletStore = result['wallet-store'];
+				if (walletStore?.state?.networks) {
+					const chainId = parseInt(chainIdHex, 16);
+					const newNetwork = walletStore.state.networks.find(
+						(n: any) => n.chainId === chainId
+					);
+					if (newNetwork) {
+						const exists = networks.find((n) => n.chainId === chainId);
+						if (!exists) {
+							addNetwork(newNetwork);
+						}
+					}
+				}
+				onNavigate('networks');
+				// 清空表单
+				setChainId('');
+				setName('');
+				setRpcUrl('');
+				setCurrencySymbol('');
+				setBlockExplorer('');
+			} else if (response?.success === false) {
+				throw new Error(response.error?.message || '添加网络失败');
+			}
+		} catch (error) {
+			setError('添加网络失败');
+			console.error(error);
+		} finally {
+			setLoading(false);
+		}
+	};
 	return (
 		<div className="min-h-full w-full">
 			<Header

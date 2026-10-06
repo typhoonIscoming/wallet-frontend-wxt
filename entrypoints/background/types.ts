@@ -159,3 +159,20 @@ export interface WatchAssetRequest {
 	};
 	timestamp: number;
 }
+
+export interface AddChainRequest {
+	requestId: string;
+	origin: string;
+	chainParams: {
+		chainId: string;
+		chainName: string;
+		nativeCurrency: {
+			name: string;
+			symbol: string;
+			decimals: number;
+		};
+		rpcUrls: string[];
+		blockExplorerUrls?: string[];
+	};
+	timestamp: number;
+}

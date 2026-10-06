@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import useRoute from '@/hooks/useRoute';
 import useSwitchChain from '@/hooks/useSwitchChain';
+import useAddChain from '@/hooks/useAddChain';
+
 import MainPage from './mainPage';
 import AuthPage from './authPage';
 import CreateWallet from './createWallet';
@@ -19,12 +21,21 @@ import TransferNFTPage from './transferNFTPage';
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
 	const { fetchSwitchChainRequest } = useSwitchChain();
+	const { fetchAddChainRequest } = useAddChain();
 	// console.log('route', route);
 	useEffect(() => {
 		if (route === 'switch-chain') {
 			fetchSwitchChainRequest();
 		}
 	}, [route, fetchSwitchChainRequest]);
+
+	// 从 background 获取添加网络请求
+	useEffect(() => {
+		if (route === 'add-chain') {
+			fetchAddChainRequest();
+		}
+	}, [route, fetchAddChainRequest]);
+
 	switch (route) {
 		case 'auth':
 			return <AuthPage onNavigate={updateRoute} />;
