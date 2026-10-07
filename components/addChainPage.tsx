@@ -116,7 +116,7 @@ export function AddChainPage({ onNavigate }: AddChainPageProps) {
 					<div className="flex gap-3">
 						<button
 							className="flex-1 rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
-							onClick={handleAddChainReject}
+							onClick={handleAddChainRejectClick}
 							disabled={loading}
 						>
 							拒绝

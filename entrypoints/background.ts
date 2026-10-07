@@ -232,7 +232,7 @@ export default defineBackground(async () => {
 			});
 			return true;
 		}
-		if (message.type === 'ADD_CHAIN_REQUEST_REJECT') {
+		if (message.type === 'WATCH_ASSET_REQUEST_REJECT') {
 			// 用户拒绝添加网络请求
 			watchAssetRequestReject({
 				message,
