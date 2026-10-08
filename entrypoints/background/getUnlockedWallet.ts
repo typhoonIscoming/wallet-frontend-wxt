@@ -32,11 +32,13 @@
  * @returns Promise<ethers.Wallet | null> - Wallet 实例，如果解锁失败则返回 null
  */
 import { browser } from 'wxt/browser';
-import { AES, enc } from 'crypto-js';
+import crypto from 'crypto-js';
 import getWalletState from './getWalletState';
 import getProvider from './getProvider';
 import { ethers } from 'ethers';
 import { WALLET_PASSWORD_KEY } from '@/utils/env';
+
+const { AES, enc } = crypto;
 
 export default async function getUnlockedWallet(): Promise<ethers.Wallet | null> {
 	try {

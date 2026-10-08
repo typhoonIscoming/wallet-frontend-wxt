@@ -3,9 +3,10 @@ import { useWalletStore } from '@/utils/wallet-store';
 import Header from './header';
 import { useBalance } from '@/hooks/useBalance';
 import { useEffect, useState } from 'react';
-import { AES, enc } from 'crypto-js';
+import crypto from 'crypto-js';
 import { UnlockIcon, LockIcon } from './icons';
 
+const { AES, enc } = crypto;
 interface MainPageProps {
 	onNavigate: (route: PopupRoute) => void;
 }

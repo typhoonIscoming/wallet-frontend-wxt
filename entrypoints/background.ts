@@ -63,7 +63,7 @@ if (typeof globalThis.Buffer === 'undefined') {
 	globalThis.Buffer = Buffer;
 }
 
-export default defineBackground(async () => {
+async function backgroundHandler() {
 	console.log('Hello background!', { id: browser.runtime.id });
 
 	/**
@@ -138,6 +138,7 @@ export default defineBackground(async () => {
 	 */
 
 	const messageListener = (message: any, sender: any, sendResponse: any) => {
+		console.log('messageListener=====', message, sender, sendResponse);
 		// Popup 路由管理
 		if (message.type === 'POPUP_GET_ROUTE') {
 			sendResponse({ route: currentPopupRoute || 'main' });
@@ -368,4 +369,6 @@ export default defineBackground(async () => {
 		}
 	};
 	browser.action.onClicked.addListener(handler);
-});
+}
+
+export default defineBackground(backgroundHandler);

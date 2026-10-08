@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DApp 连接钱包 Demo</title>
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<div class="container">
+	<h1>🔗 DApp 连接钱包 Demo</h1>
+	<p class="subtitle">
+		用于本地测试本仓库的浏览器扩展钱包（<code>window.ethereum</code> EIP-1193 Provider）。
+		请先在浏览器中加载 <code>dist/chrome-mv3</code>（<code>npm run dev</code> / <code>npm run build</code> 后）作为已解压的扩展。
+	</p>
+
+	<div class="card">
+		<h2>① Provider 状态 <span id="providerPill" class="pill">检测中...</span></h2>
+		<div class="status" id="providerInfo">正在检测 window.ethereum ...</div>
+	</div>
+
+	<div class="card">
+		<h2>② 连接钱包</h2>
+		<div class="row">
+			<button id="btnConnect">eth_requestAccounts（连接）</button>
+			<button id="btnAccounts" class="secondary">eth_accounts（查询已授权账户）</button>
+			<button id="btnChainId" class="secondary">eth_chainId</button>
+		</div>
+		<div class="status">
+			账户：<b id="accountDisplay">未连接</b><br />
+			链 ID：<b id="chainDisplay">-</b>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>③ 切换 / 添加网络</h2>
+		<div class="grid-2">
+			<div>
+				<label>目标 Chain ID（十进制，如 1 / 5 / 11155111）</label>
+				<input id="switchChainId" value="11155111" />
+			</div>
+			<div style="display:flex;align-items:flex-end;">
+				<button id="btnSwitchChain" style="width:100%">wallet_switchEthereumChain</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>④ 消息签名</h2>
+		<label>待签名消息</label>
+		<textarea id="signMessage" rows="2">Hello from DApp Demo</textarea>
+		<div class="row">
+			<button id="btnPersonalSign">personal_sign</button>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>⑤ 发送交易</h2>
+		<div class="grid-2">
+			<div>
+				<label>收款地址 (to)</label>
+				<input id="txTo" placeholder="0x..." />
+			</div>
+			<div>
+				<label>金额 (ETH)</label>
+				<input id="txValue" value="0.001" />
+			</div>
+		</div>
+		<div class="row">
+			<button id="btnSendTx">eth_sendTransaction</button>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>⑥ 添加代币 (watchAsset)</h2>
+		<div class="grid-2">
+			<div>
+				<label>代币合约地址</label>
+				<input id="tokenAddress" placeholder="0x..." />
+			</div>
+			<div>
+				<label>Symbol / Decimals</label>
+				<input id="tokenSymbol" placeholder="USDT" />
+			</div>
+		</div>
+		<div class="row">
+			<button id="btnWatchAsset">wallet_watchAsset</button>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>⑦ 事件 & 日志</h2>
+		<div id="log"></div>
+	</div>
+</div>
+
+<!-- 逻辑拆分为独立模块，便于维护：
+     provider.js  负责检测 / 封装 window.ethereum.request
+     ui.js        负责 DOM 渲染与日志输出
+     app.js       负责绑定按钮事件，组织业务流程（入口文件） -->
+<script src="./provider.js"></script>
+<script src="./ui.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>

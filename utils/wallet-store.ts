@@ -40,10 +40,12 @@ import {
 } from '@/types/wallet';
 import { browser } from 'wxt/browser';
 import * as bip39 from 'bip39';
-import { AES, SHA256, enc } from 'crypto-js';
+import crypto from 'crypto-js';
 import { ethers } from 'ethers';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
+const { AES, SHA256, enc } = crypto;
 
 interface WalletStore extends WalletState {
 	// Wallet management

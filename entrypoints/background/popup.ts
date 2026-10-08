@@ -28,6 +28,7 @@ import { browser } from 'wxt/browser';
  */
 export default async function openPopup(): Promise<void> {
 	try {
+		console.log('尝试打开popup');
 		// 尝试打开 popup
 		await browser.action.openPopup();
 	} catch (error) {
