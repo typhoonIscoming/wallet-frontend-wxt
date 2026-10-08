@@ -52,6 +52,11 @@ import {
 	watchAssetRequestReject,
 } from './background/watch-asset-request';
 
+import {
+	addChainRequestApproveHandler,
+	handleAddChainRequestReject,
+} from './background/handlers/add-chain-handler';
+
 // 在全局作用域提供 Buffer polyfill
 // 原因：浏览器环境默认没有 Node.js 的 Buffer，但 bip39 等库需要它
 if (typeof globalThis.Buffer === 'undefined') {
@@ -214,11 +219,61 @@ export default defineBackground(async () => {
 			sendResponse({ requests });
 			return true;
 		}
+
+		// 添加网络请求
+		if (message.type === 'ADD_CHAIN_REQUEST_GET') {
+			// 获取待处理的添加网络请求
+			const requests = Array.from(pendingAddChainRequests.values());
+			sendResponse({ requests });
+			return true;
+		}
+		// 用户批准添加网络请求
+		if (message.type === 'ADD_CHAIN_REQUEST_APPROVE') {
+			addChainRequestApproveHandler({
+				message,
+				sender,
+				sendResponse,
+				context: requestContext,
+			});
+			return true;
+		}
+		if (message.type === 'ADD_CHAIN_REQUEST_REJECT') {
+			// 用户拒绝添加网络请求
+			const { requestId } = message;
+			handleAddChainRequestReject(requestId, pendingAddChainRequests);
+			sendResponse({ success: true });
+			return true;
+		}
+
 		if (message.type === 'SWITCH_CHAIN_REQUEST_APPROVE') {
 			// 用户批准切换网络请求
 			const { requestId } = message;
 			handleSwitchChainRequestApprove(requestId, pendingSwitchChainRequests);
 			sendResponse({ success: true });
+			return true;
+		}
+		if (message.type === 'SWITCH_CHAIN_REQUEST_REJECT') {
+			// 用户拒绝切换网络请求
+			const { requestId } = message;
+			const request = pendingSwitchChainRequests.get(requestId);
+			if (request) {
+				const error: ProviderRpcError = {
+					name: 'ProviderError',
+					message: 'User rejected the request.',
+					code: ProviderErrorCode.USER_REJECTED_REQUEST,
+				};
+				request.reject(error);
+				pendingSwitchChainRequests.delete(requestId);
+			}
+			sendResponse({ success: true });
+			return true;
+		}
+
+		// 添加代币请求
+		if (message.type === 'WATCH_ASSET_REQUEST_GET') {
+			// 获取待处理的添加代币请求
+			const requests = Array.from(pendingWatchAssetRequests.values());
+			sendResponse({ requests });
 			return true;
 		}
 
