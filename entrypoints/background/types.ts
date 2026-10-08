@@ -176,3 +176,9 @@ export interface AddChainRequest {
 	};
 	timestamp: number;
 }
+
+export interface AuthRequest {
+	requestId: string;
+	origin: string;
+	timestamp: number;
+}

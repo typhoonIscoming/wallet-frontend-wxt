@@ -297,6 +297,47 @@ export default defineBackground(async () => {
 			});
 			return true;
 		}
+
+		// 处理授权请求相关消息
+		if (message.type === 'AUTH_REQUEST_GET') {
+			// 获取待处理的授权请求
+			const requests = Array.from(pendingAuthRequests.values()).map((req) => ({
+				requestId: req.requestId,
+				origin: req.origin,
+				timestamp: req.timestamp,
+			}));
+			sendResponse({ requests });
+			return true;
+		}
+
+		if (message.type === 'AUTH_REQUEST_APPROVE') {
+			// 用户批准授权请求
+			const { requestId, accounts } = message;
+			const request = pendingAuthRequests.get(requestId);
+			if (request) {
+				request.resolve(accounts);
+				pendingAuthRequests.delete(requestId);
+			}
+			sendResponse({ success: true });
+			return true;
+		}
+
+		if (message.type === 'AUTH_REQUEST_REJECT') {
+			// 用户拒绝授权请求
+			const { requestId } = message;
+			const request = pendingAuthRequests.get(requestId);
+			if (request) {
+				const error: ProviderRpcError = {
+					name: 'ProviderError',
+					message: 'User rejected the request.',
+					code: ProviderErrorCode.USER_REJECTED_REQUEST,
+				};
+				request.reject(error);
+				pendingAuthRequests.delete(requestId);
+			}
+			sendResponse({ success: true });
+			return true;
+		}
 	};
 	browser.runtime.onMessage.addListener(messageListener);
 

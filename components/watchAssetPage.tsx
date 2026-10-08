@@ -9,7 +9,7 @@ interface WatchAssetPageProps {
 	onNavigate: (route: PopupRoute) => void;
 }
 
-export function WatchAssetPage({ onNavigate }: WatchAssetPageProps) {
+export default function WatchAssetPage({ onNavigate }: WatchAssetPageProps) {
 	const { watchAssetRequest, loading, error, handleWatchAssetApprove, handleWatchAssetReject } =
 		useWatchAsset();
 

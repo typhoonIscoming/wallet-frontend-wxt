@@ -17,6 +17,7 @@ import NFTsPage from './nftsPage';
 import AddNetworkPage from './addNetwork';
 import SendTokenPage from './sendTokenPage';
 import TransferNFTPage from './transferNFTPage';
+import WatchAssetPage from './watchAssetPage';
 
 export default function Root() {
 	const { route, updateRoute, isAutoRoutingRef } = useRoute();
@@ -65,6 +66,8 @@ export default function Root() {
 			return <MainPage onNavigate={updateRoute} />;
 		case 'transfer-nft':
 			return <TransferNFTPage onNavigate={updateRoute} />;
+		case 'watch-asset':
+			return <WatchAssetPage onNavigate={updateRoute} />;
 		default:
 			return <MainPage onNavigate={updateRoute} />;
 	}
