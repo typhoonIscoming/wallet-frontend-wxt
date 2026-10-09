@@ -39,6 +39,11 @@ export default function AuthPage({ onNavigate }: AuthPageProps) {
 		}
 	};
 
+	// 从 background 获取授权请求
+	useEffect(() => {
+		fetchAuthRequest();
+	}, [fetchAuthRequest]);
+
 	if (!authRequest) {
 		return (
 			<div className="min-h-full w-[360px] bg-black text-slate-100">

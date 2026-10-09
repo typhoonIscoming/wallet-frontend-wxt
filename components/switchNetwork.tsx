@@ -40,6 +40,7 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 		setError(null);
 		try {
 			await handleSwitchChainApprove();
+			onNavigate('main');
 		} catch (err) {
 			setError('切换网络失败，请重试。');
 		} finally {
@@ -48,10 +49,8 @@ export default function SwitchChainPage({ onNavigate }: SwitchChainPageProps) {
 	};
 
 	useEffect(() => {
-		if (route === 'switch-chain') {
-			fetchSwitchChainRequest();
-		}
-	}, [route, fetchSwitchChainRequest]);
+		fetchSwitchChainRequest();
+	}, [fetchSwitchChainRequest]);
 
 	if (!switchChainRequest) {
 		return (
